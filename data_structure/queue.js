@@ -39,6 +39,25 @@ Queue.prototype.peek = function () {
     return this.head == null ? undefined : this.head.data;
 }
 
+function DoubleStackQueue() {
+    this.inbox = [];
+    this.outbox = [];
+}
+
+DoubleStackQueue.prototype.enqueue = function (data) {
+    this.inbox.push(data);
+}
+
+DoubleStackQueue.prototype.dequeue = function () {
+    if (this.outbox.length == 0) {
+        while (this.inbox.length !== 0) {
+            this.outbox.push(this.inbox.pop());
+        }
+    } else {
+        return this.outbox.pop();
+    }
+}
+
 const myQueue = new Queue();
 myQueue.enqueue("first");
 myQueue.enqueue("second");
@@ -62,6 +81,19 @@ function testQueue(n) {
     for (let i = 0; i < n; i++) {
         queueInstance.enqueue(i);
     }
+
+    for (let i = 0; i < n; i++) {
+        queueInstance.dequeue();
+    }
+    return queueInstance;
+}
+
+function testDoubleStack(n) {
+    const queueInstance = new DoubleStackQueue();
+    for (let i = 0; i < n; i++) {
+        queueInstance.enqueue(i);
+    }
+
     for (let i = 0; i < n; i++) {
         queueInstance.dequeue();
     }
@@ -86,5 +118,6 @@ const timeCheck = (func, ...rest) => {
     console.log(`${func}는 실행에 ${rest}를 전달받아 ${end - time}밀리초 걸렸습니다.`)
 }
 
-timeCheck(testQueue, 10000000);
-timeCheck(testList, 100000);
+timeCheck(testQueue, 50000000);
+timeCheck(testList, 50000);
+timeCheck(testDoubleStack, 50000000);
